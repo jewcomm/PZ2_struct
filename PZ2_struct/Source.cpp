@@ -3,10 +3,11 @@
 #include <vector>
 #include <stack>
 #include <list>
+#include <limits>
 
 const int size = 14;
 // входящие ребра
-int adjacency[size][size] = { { 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 },
+/*int adjacency[size][size] = { { 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 },
 						  { 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 						  { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
 						  { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
@@ -19,7 +20,24 @@ int adjacency[size][size] = { { 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 },
 						  { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
 						  { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
 						  { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1 },
-						  { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 } };
+						  { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 } };*/
+
+
+
+int adjacency[size][size] = { {0, 6, 5, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0},
+							{ 0, 0, 7, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+							{ 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0},
+							{ 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0},
+							{ 0, 0, 0, 2, 0, 3, 0, 4, 0, 0, 0, 5, 0, 0},
+							{ 0, 0, 0, 4, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0},
+							{ 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0},
+							{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+							{ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+							{ 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 5, 2, 0, 0},
+							{ 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0},
+							{ 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0},
+							{ 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 2},
+							{ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0} };
 
 /*
 adjacency[i][j] - путь из вершины i в j
@@ -30,8 +48,12 @@ class node
 private:
 
 	int vertex; // номер вершины
+
 	std::vector <int> inpVer; // входящие ребра из вершин
+	std::vector <int> inpDist;
 	int inpSum; // количество входящих ребер
+
+	std::vector <int> outDist; // входящие ребра из вершин
 	std::vector <int> outVer; // исходящие ребра из вершины
 	int outSum; //  количество исхоядщих ребер
 
@@ -48,6 +70,16 @@ public:
 	int getOutSum() 
 	{
 		return this->outSum;
+	}
+
+	std::vector <int> getInpDist()
+	{
+		return this->inpDist;
+	}
+
+	std::vector <int> getOutDist()
+	{
+		return this->outDist;
 	}
 
 	std::vector <int> getInpVer()
@@ -68,11 +100,13 @@ void node::set(int _vertex, int _adj[size][size], int size) // инициализация стр
 	this->inpVer.resize(count); // выделяем память
 	for (int i = 0; i < size; i++) // входящие ребра
 	{
-		if(_adj[i][_vertex] == 1) 
+		if(_adj[i][_vertex] > 0) 
 		{
 			count += 1;
 			inpVer.resize(count);
+			inpDist.resize(count);
 			inpVer[count - 1] = i;
+			inpDist[count - 1] = _adj[i][_vertex];
 		}
 	}
 	this->inpSum = count;
@@ -81,11 +115,13 @@ void node::set(int _vertex, int _adj[size][size], int size) // инициализация стр
 	this->outVer.resize(count); // исходящие ребра
 	for (int i = 0; i < size; i++)
 	{
-		if (_adj[_vertex][i] == 1)
+		if (_adj[_vertex][i] > 0)
 		{
 			count += 1;
 			outVer.resize(count);
+			outDist.resize(count);
 			outVer[count - 1] = i;
+			outDist[count - 1] = _adj[_vertex][i];
 		}
 	}
 	this->outSum = count;
@@ -98,7 +134,7 @@ void node::print() // печать данных вершины
 	std::cout << "Входящие вершины: " << std::endl;
 	for(int i = 0; i < this->inpSum; i++)
 	{
-		std::cout << this->inpVer[i] << " ";
+		std::cout << this->inpVer[i] << ". Расстояние между вершинами = " << this->inpDist[i] << std::endl; 
 	}
 	std::cout << std::endl;
 
@@ -106,7 +142,7 @@ void node::print() // печать данных вершины
 	std::cout << "Исходящие вершины: " << std::endl;
 	for (int i = 0; i < this->outSum; i++)
 	{
-		std::cout << this->outVer[i] << " ";
+		std::cout << this->outVer[i] << ". Расстояние между вершинами = " << this->outDist[i] << std::endl;
 	}
 	std::cout << std::endl;
 	std::cout << std::endl;
@@ -114,6 +150,8 @@ void node::print() // печать данных вершины
 
 std::vector <int> sort(std::vector <node> nodes);
 int check(std::vector <int> input, int use[size]);
+std::vector <int> DagShortestPaths(std::vector <node> nodes, int vertex);
+void relax(int u, int v, std::vector <int> shortest, std::vector <int> pred);
 
 int main()
 {
@@ -134,12 +172,19 @@ int main()
 	topSort = sort(nodes); // вызов функции сортировки 
 
 
-	std::cout << "Топологически отсортированные вершины:" << std::endl;
+	/*std::cout << "Топологически отсортированные вершины:" << std::endl;
 	for (int i = 0; i < size; i++)
 	{
 		std::cout << topSort[i] << " ";
 	}
-	std::cout << std::endl;
+	std::cout << std::endl;*/
+
+	std::vector <int> shortest = DagShortestPaths(nodes, 0);
+
+	for (int i = 0; i < size; i++)
+	{
+		std::cout << shortest[i] << " ";
+	}
 
 	return 0;
 }
@@ -195,3 +240,57 @@ int check(std::vector <int> input, int use[size])
 	}
 	return 1;
 }
+
+
+std::vector <int> DagShortestPaths(std::vector <node> nodes, int vertex)
+{
+	std::vector <int> shortest;
+	std::vector <int> pred;
+
+	shortest.resize(size);
+	pred.resize(size);
+
+	for (int i = 0; i < size; i++)
+	{
+		shortest[i] = INFINITY;
+		pred[i] = NULL;
+	}
+	shortest[vertex] = 0;
+
+	std::vector <int> topSort; // вектор для хранения отсортированной последовательности
+	topSort = sort(nodes); // вызов функции сортировки 
+
+	for (int i = 0; i < size; i++)
+	{
+		int u = topSort[i];
+		int adjSize = nodes[i].getOutSum();
+		std::vector <int> adj = nodes[i].getOutVer();
+		for (int j = 0; j < adjSize; j++)
+		{
+			if (adj[j] == i)
+			{
+				relax(u, adj[j], shortest, pred);
+			}
+			//relax(u, v, shortest, pred);
+		}
+	}
+
+	
+	for (int i = 0; i < size; i++)
+	{
+		int k;
+	}
+
+	return shortest;
+
+}
+
+void relax(int u, int v, std::vector <int> shortest, std::vector <int> pred)
+{
+	if ((shortest[u] + adjacency[u][v]) < shortest[v])
+	{
+		shortest[v] = shortest[u] + adjacency[u][v];
+		pred[v] = u;
+	}
+}
+

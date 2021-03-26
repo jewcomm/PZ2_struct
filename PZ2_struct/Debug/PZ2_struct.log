@@ -1,2 +1,8 @@
 ﻿  Source.cpp
+C:\Users\alexu\source\repos\PZ2_struct\PZ2_struct\Source.cpp(255,17): warning C4244:  =: преобразование "float" в "_Ty", возможна потеря данных
+C:\Users\alexu\source\repos\PZ2_struct\PZ2_struct\Source.cpp(255,17): warning C4244:         with
+C:\Users\alexu\source\repos\PZ2_struct\PZ2_struct\Source.cpp(255,17): warning C4244:         [
+C:\Users\alexu\source\repos\PZ2_struct\PZ2_struct\Source.cpp(255,17): warning C4244:             _Ty=int
+C:\Users\alexu\source\repos\PZ2_struct\PZ2_struct\Source.cpp(255,17): warning C4244:         ]
+C:\Users\alexu\source\repos\PZ2_struct\PZ2_struct\Source.cpp(281,7): warning C4101:  k: неиспользованная локальная переменная
   PZ2_struct.vcxproj -> C:\Users\alexu\source\repos\PZ2_struct\Debug\PZ2_struct.exe
